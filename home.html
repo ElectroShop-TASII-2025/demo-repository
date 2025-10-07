@@ -27,17 +27,24 @@
       ⚠️ Chequea tus productos con bajo stock
     </div>
 </a>
-  
+<br>
 
-      <!-- Sección productos más vendidos -->
-      <h5 class="fw-bold text-center mb-2" style="color: rgb(60, 0, 84);">TUS PRODUCTOS MÁS VENDIDOS</h5>
+<style>
+  .img-hover:hover {
+    transform: translateY(-10px) scale(1.05);
+    transition: 0.3s;
+  }
+</style>
 
-      <!-- Imagen representativa -->
-      <div class="text-center mb-3">
-        <img src="img/imagendeproducto.jpg" alt="Productos más vendidos" class="img-fluid rounded"
-          style="max-height: 120px; object-fit: cover;">
-      </div>
+<div class="d-flex justify-content-center">
+  <img src="/img/imagesadorno1.jpeg" class="img-fluid rounded img-hover" width="80" height="70">
+  <img src="/img/imagesadorno2.jpeg" class="img-fluid rounded img-hover" width="80" height="70">
+  <img src="/img/imagesadorno3.jpeg" class="img-fluid rounded img-hover" width="80" height="70">
+  <img src="/img/imagesadorno4.jpeg" class="img-fluid rounded img-hover" width="80" height="70">
+</div>
 
+
+<br>
       <!-- Lista de productos destacados -->
       <div class="mb-3">
         <div class="d-flex align-items-center justify-content-between border-bottom py-1">
@@ -53,12 +60,13 @@
           <small>10 unidades</small>
         </div>
       </div>
-
+<br><br>
       <!-- Botón agregar producto -->
-      <div class="d-grid">
+       <center>
+        <div class="d-grid">
         <a href="/agregarProducto.html"><button class="btn text-white" style="background-color: rgb(60, 0, 84);  ">+ AGREGAR PRODUCTO</button></a>
       </div>
-
+    </center>
     </div>
   </div>
 
