@@ -3,7 +3,27 @@
   "version": "0.2.0",
   "description": "A sample package.json",
   "dependencies": {
-    "@primer/css": "17.0.1"
+    "@primer/css": "17.0.1",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mssql": "^12.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "main": "low-stock.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElectroShop-TASII-2025/demo-repository.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/ElectroShop-TASII-2025/demo-repository/issues"
+  },
+  "homepage": "https://github.com/ElectroShop-TASII-2025/demo-repository#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
