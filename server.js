@@ -1,7 +1,3 @@
-// =========================
-// server.js — BACKEND ElectroShop
-// =========================
-
 const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
@@ -10,88 +6,57 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// =========================
-// 🔧 CONFIGURACIÓN DE CONEXIÓN
-// ⚠️ Reemplazá "12345" por la contraseña real del usuario 'sa'
-// =========================
 const dbConfig = {
-  user: 'sa',                     // usuario SQL
-  password: '12345',              // contraseña de tu SQL Server
-  server: 'localhost',            // si tu SSMS dice sólo "localhost", dejalo así
-  port: 1433,                     // puerto fijo
-  database: 'ElectroShop',        // nombre exacto de tu base
+  user: 'app_user',
+  password: 'App12345!',
+  server: '127.0.0.1',   // si tu SQL está en el puerto 1434, agregá: , port: 1434
+  // port: 1434,          // <- descomentá esta línea si tu SQL escucha en 1434
+  database: 'ElectroShop',
   options: {
     encrypt: false,
     trustServerCertificate: true
   }
 };
 
-// =========================
-// 🔍 RUTA PARA PROBAR CONEXIÓN
-// =========================
-app.get('/api/health', async (_req, res) => {
+
+app.get('/api/health', async (req, res) => {
   try {
-    const pool = await sql.connect(dbConfig);
-    const result = await pool.request().query('SELECT 1 AS ok');
-    res.json({ ok: result.recordset[0].ok === 1 });
+    await sql.connect(dbConfig);
+    const result = await sql.query('SELECT 1 AS ok');
+    res.json(result.recordset[0]);
   } catch (err) {
-    console.error('❌ ERROR CONEXIÓN DB:', {
-      message: err.message,
-      code: err.code,
-      info: err.originalError?.info || err.originalError
-    });
+    console.error(err);
     res.status(500).json({ error: err.message });
   } finally {
-    await sql.close();
+    sql.close();
   }
 });
 
-// =========================
-// 📦 PRODUCTOS CON BAJO STOCK
-// (menor a 15, orden ascendente)
-// =========================
+// 📦 Bajo stock (<15), agrupado y ordenado ascendente
 app.get('/api/bajo-stock', async (_req, res) => {
   try {
     const pool = await sql.connect(dbConfig);
     const result = await pool.request().query(`
-      SELECT nombre, marca, color, cantidad
+      SELECT
+        nombre,
+        marca,
+        color,
+        SUM(cantidad) AS cantidad
       FROM dbo.productos
-      WHERE cantidad < 15
-      ORDER BY cantidad ASC, nombre ASC
+      GROUP BY nombre, marca, color
+      HAVING SUM(cantidad) < 15
+      ORDER BY SUM(cantidad) ASC, nombre ASC;
     `);
     res.json(result.recordset);
   } catch (err) {
-    console.error('❌ Error al conectar o consultar:', err);
+    console.error('❌ DB QUERY ERROR (/api/bajo-stock):', err.message);
     res.status(500).json({ error: 'DB error' });
   } finally {
-    await sql.close();
+    try { await sql.close(); } catch {}
   }
 });
 
-// =========================
-// 📋 TODOS LOS PRODUCTOS (opcional)
-// =========================
-app.get('/api/stock', async (_req, res) => {
-  try {
-    const pool = await sql.connect(dbConfig);
-    const result = await pool.request().query(`
-      SELECT nombre, marca, color, cantidad
-      FROM dbo.productos
-      ORDER BY cantidad ASC, nombre ASC
-    `);
-    res.json(result.recordset);
-  } catch (err) {
-    console.error('❌ Error /api/stock:', err);
-    res.status(500).json({ error: 'DB error' });
-  } finally {
-    await sql.close();
-  }
-});
 
-// =========================
-// 🚀 INICIAR SERVIDOR
-// =========================
 const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
+
