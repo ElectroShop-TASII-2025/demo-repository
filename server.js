@@ -55,6 +55,8 @@ app.get('/api/bajo-stock', async (_req, res) => {
     try { await sql.close(); } catch {}
   }
 });
+const path = require('path');
+app.use(express.static(path.join(__dirname))); // sirve los HTML/CSS/JS directamente
 
 
 const PORT = 3000;
